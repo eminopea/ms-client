@@ -127,8 +127,8 @@ class CustomerServiceImplTest {
         when(validatorResolver.resolve(any(), any()))
                 .thenReturn(documentValidator);
 
-        when(customerMapper.supports(any()))
-                .thenReturn(true);
+        // when(customerMapper.supports(any()))
+        //         .thenReturn(true);
 
         when(mapperResolver.resolve(any()))
                 .thenReturn(customerMapper);
@@ -278,8 +278,8 @@ class CustomerServiceImplTest {
     @Test
     void shouldThrowExceptionWhenDocumentIsInvalid() {
 
-        when(factoryResolver.resolve(any()))
-                .thenReturn(customerFactory);
+        // when(factoryResolver.resolve(any()))
+        //         .thenReturn(customerFactory);
 
         when(validatorResolver.resolve(any(), any()))
                 .thenReturn(documentValidator);
