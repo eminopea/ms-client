@@ -115,10 +115,10 @@ class CustomerServiceImplTest {
         customerDocument.setIdentificationNumber(
                 request.getIdentificationNumber());
 
-        when(factoryResolver.resolve(CustomerType.PN))
+        when(factoryResolver.resolve(any()))
                 .thenReturn(customerFactory);
 
-        when(validatorResolver.resolve(DocumentType.DNI, CustomerType.PN))
+        when(validatorResolver.resolve(any(), any()))
                 .thenReturn(documentValidator);
 
         when(customerMapper.supports(any()))
