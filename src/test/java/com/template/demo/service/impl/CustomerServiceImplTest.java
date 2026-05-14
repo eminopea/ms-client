@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.doThrow; 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,20 +33,14 @@ import com.template.demo.repository.CustomerRepository;
 import com.template.demo.validators.DocumentValidator;
 
 // TDD: primero escribes las pruebas, luego implementas el código hasta que las pruebas pasen.
-
 // Junit5: en este ejemplo se utiliza JUnit 5 para escribir las pruebas unitarias, 
 // lo que permite una sintaxis más moderna y características avanzadas.
-
 // Mockito: se utiliza Mockito para crear objetos simulados (mocks) de las dependencias, 
 // lo que facilita la prueba de la lógica de negocio sin depender de implementaciones concretas.
-
 // InjectMocks: se utiliza la anotación @InjectMocks para inyectar los mocks en la clase que se está probando,
 // lo que simplifica la configuración de las pruebas y mejora la legibilidad del código de prueba.
-
 // Principio de Inversion de dependencias (DIP): la clase CustomerServiceImpl depende de abstracciones (interfaces) 
 // en lugar de implementaciones concretas, lo que facilita el mantenimiento y las pruebas unitarias.
-
-
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceImplTest {
 
@@ -95,8 +89,8 @@ class CustomerServiceImplTest {
 
         request.setIdentificationNumber("12345678");
 
-        customerDocument =
-                new PersonNaturalCustomerDocument();
+        customerDocument
+                = new PersonNaturalCustomerDocument();
 
         customerDocument.setId("1");
 
@@ -117,20 +111,27 @@ class CustomerServiceImplTest {
 
         // when(factoryResolver.resolve(any()))
         //         .thenReturn(customerFactory);
-
         // when(validatorResolver.resolve(any(), any()))
         //         .thenReturn(documentValidator);
-
         // when(customerMapper.supports(any()))
         //         .thenReturn(true);
-
         // when(mapperResolver.resolve(any()))
         //         .thenReturn(customerMapper);
     }
 
     @Test
     void shouldCreateCustomerSuccessfully() {
+        when(factoryResolver.resolve(any()))
+                .thenReturn(customerFactory);
 
+        when(validatorResolver.resolve(any(), any()))
+                .thenReturn(documentValidator);
+
+        when(customerMapper.supports(any()))
+                .thenReturn(true);
+
+        when(mapperResolver.resolve(any()))
+                .thenReturn(customerMapper);
         when(customerRepository.findByEmail(
                 request.getEmail()))
                 .thenReturn(Optional.empty());
@@ -149,8 +150,8 @@ class CustomerServiceImplTest {
         when(customerMapper.toResponse(any()))
                 .thenReturn(request);
 
-        CustomerBase response =
-                customerService.create(request);
+        CustomerBase response
+                = customerService.create(request);
 
         assertNotNull(response);
 
@@ -161,8 +162,8 @@ class CustomerServiceImplTest {
     @Test
     void shouldThrowExceptionWhenEmailExists() {
 
-        CustomerDocument existing =
-                new PersonNaturalCustomerDocument();
+        CustomerDocument existing
+                = new PersonNaturalCustomerDocument();
 
         existing.setId("1");
 
@@ -178,20 +179,38 @@ class CustomerServiceImplTest {
     @Test
     void shouldFindAllCustomers() {
 
+        when(mapperResolver.resolve(any()))
+                .thenReturn(customerMapper);
+
         when(customerRepository.findAll())
                 .thenReturn(List.of(customerDocument));
 
         when(customerMapper.toResponse(any()))
                 .thenReturn(request);
 
-        List<CustomerBase> response =
-                customerService.findAll();
+        when(customerRepository.findAll())
+                .thenReturn(List.of(customerDocument));
+
+        when(customerMapper.toResponse(any()))
+                .thenReturn(request);
+
+        List<CustomerBase> response
+                = customerService.findAll();
 
         assertEquals(1, response.size());
     }
 
     @Test
     void shouldUpdateCustomerSuccessfully() {
+
+        when(factoryResolver.resolve(any()))
+                .thenReturn(customerFactory);
+
+        when(validatorResolver.resolve(any(), any()))
+                .thenReturn(documentValidator);
+
+        when(mapperResolver.resolve(any()))
+                .thenReturn(customerMapper);
 
         when(customerRepository.findById("1"))
                 .thenReturn(Optional.of(customerDocument));
@@ -211,8 +230,8 @@ class CustomerServiceImplTest {
         when(customerMapper.toResponse(any()))
                 .thenReturn(request);
 
-        CustomerBase response =
-                customerService.update(
+        CustomerBase response
+                = customerService.update(
                         "1",
                         request);
 
@@ -241,8 +260,8 @@ class CustomerServiceImplTest {
     @Test
     void shouldThrowExceptionWhenIdentificationNumberExists() {
 
-        CustomerDocument existing =
-                new PersonNaturalCustomerDocument();
+        CustomerDocument existing
+                = new PersonNaturalCustomerDocument();
 
         existing.setId("2");
 
@@ -258,6 +277,12 @@ class CustomerServiceImplTest {
 
     @Test
     void shouldThrowExceptionWhenDocumentIsInvalid() {
+
+        when(factoryResolver.resolve(any()))
+                .thenReturn(customerFactory);
+
+        when(validatorResolver.resolve(any(), any()))
+                .thenReturn(documentValidator);
 
         doThrow(new BusinessException("DNI inválido"))
                 .when(documentValidator)
@@ -278,13 +303,13 @@ class CustomerServiceImplTest {
     @Test
     void shouldThrowExceptionWhenEmailExistsOnUpdate() {
 
-        CustomerDocument existing =
-                new PersonNaturalCustomerDocument();
+        CustomerDocument existing
+                = new PersonNaturalCustomerDocument();
 
         existing.setId("1");
 
-        CustomerDocument other =
-                new PersonNaturalCustomerDocument();
+        CustomerDocument other
+                = new PersonNaturalCustomerDocument();
 
         other.setId("2");
 
