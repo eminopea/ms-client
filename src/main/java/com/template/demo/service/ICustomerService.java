@@ -3,7 +3,6 @@ package com.template.demo.service;
 import java.util.List;
 
 import org.openapitools.model.CustomerBase;
-import org.openapitools.model.CustomerResponse;
 
 /**
  * Interfaz de servicio para la gestión de clientes. Principio de Abstracción
