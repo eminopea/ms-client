@@ -48,7 +48,7 @@ pipeline {
                 withSonarQubeEnv('sonar-local') {
                     sh '''
                     mvn clean verify sonar:sonar \
-                    -Dsonar.projectKey=ms-auth
+                    -Dsonar.projectKey=ms-client
                     '''
                 }
             }
