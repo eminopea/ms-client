@@ -115,17 +115,17 @@ class CustomerServiceImplTest {
         customerDocument.setIdentificationNumber(
                 request.getIdentificationNumber());
 
-        when(factoryResolver.resolve(any()))
-                .thenReturn(customerFactory);
+        // when(factoryResolver.resolve(any()))
+        //         .thenReturn(customerFactory);
 
-        when(validatorResolver.resolve(any(), any()))
-                .thenReturn(documentValidator);
+        // when(validatorResolver.resolve(any(), any()))
+        //         .thenReturn(documentValidator);
 
-        when(customerMapper.supports(any()))
-                .thenReturn(true);
+        // when(customerMapper.supports(any()))
+        //         .thenReturn(true);
 
-        when(mapperResolver.resolve(any()))
-                .thenReturn(customerMapper);
+        // when(mapperResolver.resolve(any()))
+        //         .thenReturn(customerMapper);
     }
 
     @Test
