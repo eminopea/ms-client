@@ -1,0 +1,232 @@
+openapi: 3.0.3
+
+info:
+  title: Project First API
+  version: 1.0.0
+
+paths:
+
+  /api/v1/customers:
+
+    post:
+      tags:
+        - Customer
+
+      summary: Registrar cliente
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+
+            schema:
+              $ref: '#/components/schemas/CustomerBase'
+
+      responses:
+        '201':
+          description: Cliente creado
+
+          content:
+            application/json:
+
+              schema:
+                $ref: '#/components/schemas/CustomerBase'
+
+    get:
+      tags:
+        - Customer
+
+      summary: Listar clientes
+
+      responses:
+        '200':
+          description: Lista de clientes
+
+          content:
+            application/json:
+
+              schema:
+                type: array
+
+                items:
+                  $ref: '#/components/schemas/CustomerBase'
+
+  /api/v1/customers/{id}:
+
+    put:
+      tags:
+        - Customer
+
+      summary: Actualizar cliente
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+
+            schema:
+              $ref: '#/components/schemas/CustomerBase'
+
+      responses:
+        '200':
+          description: Cliente actualizado
+
+          content:
+            application/json:
+
+              schema:
+                $ref: '#/components/schemas/CustomerBase'
+
+  /api/v1/customers/dni/{dni}:
+
+    get:
+      tags:
+        - Customer
+
+      summary: Buscar cliente por DNI
+
+      parameters:
+        - name: dni
+          in: path
+          required: true
+          description: Número de documento (DNI o RUC)
+
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Cliente encontrado
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerBase'
+
+        '404':
+          description: Cliente no encontrado
+
+        '400':
+          description: DNI inválido
+
+components:
+
+  schemas:
+ 
+    # =========================================
+    # ENUMS
+    # =========================================
+
+    CustomerType:
+      type: string
+
+      enum:
+        - PN
+        - PJ
+
+    DocumentType:
+      type: string
+
+      enum:
+        - DNI
+        - RUC
+
+    # =========================================
+    # BASE
+    # =========================================
+
+    CustomerBase:
+      type: object
+
+      required:
+        - customerType
+        - fullName
+        - email
+        - age
+        - documentType
+        - identificationNumber
+
+      properties:
+
+        customerType:
+          $ref: '#/components/schemas/CustomerType'
+
+        fullName:
+          type: string
+          minLength: 3
+          maxLength: 100
+
+        email:
+          type: string
+          format: email
+
+        age:
+          type: integer
+
+        documentType:
+          $ref: '#/components/schemas/DocumentType'
+
+        identificationNumber:
+          type: string
+
+        bonusMiles:
+          type: integer
+          
+      discriminator:
+        propertyName: customerType
+        mapping:
+          PN: '#/components/schemas/PersonNaturalCustomer'
+          PJ: '#/components/schemas/PersonJuridicaCustomer'
+
+    # =========================================
+    # PERSONA NATURAL
+    # =========================================
+
+    PersonNaturalCustomer:
+
+      allOf:
+        - $ref: '#/components/schemas/CustomerBase' 
+        - type: object
+
+          required:
+            - birthDate
+
+          properties:
+
+            birthDate:
+              type: string
+              format: date
+
+    # =========================================
+    # PERSONA JURIDICA
+    # =========================================
+
+    PersonJuridicaCustomer:
+
+      allOf:
+        - $ref: '#/components/schemas/CustomerBase'
+
+        - type: object
+
+          required:
+            - constitutionDate
+            - legalRepresentative
+
+          properties:
+
+            constitutionDate:
+              type: string
+              format: date
+
+            legalRepresentative:
+              type: string
